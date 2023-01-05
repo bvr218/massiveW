@@ -1,0 +1,6 @@
+[Unit]
+Description=Daemon node whatsapp
+[Service]
+ExecStart=/var/www/html/wallapos/daemon.sh
+[Install]
+WantedBy=multi-user.target
