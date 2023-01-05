@@ -128,7 +128,7 @@ async function generateFile(data) {
     let salida = "";
     let index = 0;
     let total = 0;
-    fs.writeFile("/var/www/html/wallapos/contactos.vcf", salida, (err) => {
+    fs.writeFile(__dirname +"/contactos.vcf", salida, (err) => {
         if (err)
             return "error";
 
@@ -137,7 +137,7 @@ async function generateFile(data) {
         if (data.fileC) {
             let archivo;
             try {
-                archivo = fs.readFileSync('contactosBase64', "utf8");
+                archivo = fs.readFileSync(__dirname +'/contactosBase64', "utf8");
                 baseAuth = archivo.split(",");
                 let mimeType = archivo.split(";")[0].split(":")[1];
                 if (mimeType == "text/x-vcard" || mimeType == "text/vcard") {
@@ -200,8 +200,8 @@ async function generateFile(data) {
                         }
                     });
                 } else {
-                    await fs.writeFileSync("salida.xlsx", baseAuth[1], "base64");
-                    var file = XLSX.readFile('salida.xlsx');
+                    await fs.writeFileSync(__dirname +"/salida.xlsx", baseAuth[1], "base64");
+                    var file = XLSX.readFile(__dirname +'/salida.xlsx');
                     let dataa = []
 
                     const sheets = file.SheetNames
@@ -347,7 +347,7 @@ FN:Contacto ${index}
 TEL;CELL:${data.pais}${i}
 END:VCARD
 `;
-                    fs.appendFile('/var/www/html/wallapos/contactos.vcf', salida, function (err) {
+                    fs.appendFile(__dirname +'/contactos.vcf', salida, function (err) {
                         if (err) return "error";
                     });
                 }
@@ -373,7 +373,7 @@ END:VCARD
     `;
 
 
-            fs.appendFile('/var/www/html/wallapos/contactos.vcf', salida, function (err) {
+            fs.appendFile(__dirname +'/contactos.vcf', salida, function (err) {
                 if (err) return "error";
             });
         }
