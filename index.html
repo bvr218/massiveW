@@ -1,0 +1,133 @@
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/contactos/add.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://agenda.fututel.com/wallapos/css/myfirst.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactos_App</title>
+    <link rel="shortcut icon" href="/contactos/logo" type="image/x-icon">
+</head>
+
+<body style="background-image:url('/contactos/background')">
+    <div style="padding: 10%; text-align: center; position: relative;" class="container">
+        
+        
+    
+        
+        
+        <div id="loginbox" style=" max-width: 335px;display:inline-block" class="mainbox ">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Generador de Contactos</div>
+
+                </div>
+
+                <div style="padding-top:30px;" class="panel-body">
+
+                    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12">Por favor, rellene todos los campos</div>
+
+                    <form id="loginform" class="form-horizontal" role="form">
+
+                        <div style="margin-bottom: 25px; max-width: 250px;" class="input-group">
+                            <span class="input-group-addon">Desde</span>
+                            <input id="desde" type="number" required class="form-control" value=""
+                                placeholder="000000001">
+                        </div>
+
+                        <div style="margin-bottom: 25px; max-width: 250px;" class="input-group">
+                            <span class="input-group-addon">Hasta</span>
+                            <input id="hasta" type="number" required class="form-control"
+                                placeholder="000000020">
+                        </div>
+                        <div id="lastinput" style="margin-bottom: 25px; max-width: 250px;" class="input-group">
+                            <span class="input-group-addon">Pais</span>
+                            <select class="form-control" id="pais" required>
+                                
+                            </select>
+                        </div>
+                        <label for="validar">Verificar en whatsapp</label>
+                        <input onchange="validacion()" type="checkbox" id="validar">
+
+
+
+                        <div class="input-group">
+
+                            <div style="margin-top:10px;position:relative" class="form-group">
+                                <!-- Button -->
+
+                                <div class="col-sm-12 controls">
+                                    <a style="position: relative; left: 35%;"id="btn-login" onclick="generar()" class="btn btn-success">Generar Contactos</a>
+                                </div>
+                            </div>
+
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div id="mensajebox" style=" max-width: 335px; position: relative; display:none;top: -66px;" class="mainbox ">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Enviar Mensajes</div>
+                </div>
+                <div class="bar">
+                    <label title="Agregar un boton al mensaje" for="sendB" id="labelSendB"><i class="fa fa-thumbs-up fa-2x"></i></label>
+                    <input style="display: none;" onchange="addButton()" type="checkbox" id="sendB">
+                    <label title="Agregar una imagen al mensaje" for="sendI" id="labelSendI"><i class="fa fa-camera fa-2x"></i></label>
+                    <input style="display: none;" onchange="addImage()" type="checkbox" id="sendI">
+                    <label title="Archivo de contactos" for="sendC" id="labelSendC"><i class="fa fa-file fa-2x"></i></label>
+                    <input style="display: none;" onchange="addFile()" type="checkbox" id="sendC">
+                </div>
+                <div style="padding-top:30px;" class="panel-body">
+                    <textarea class="form-control" style="resize: none;" id="mensaje" cols="30" rows="9"></textarea>
+                </div>
+                <div style="margin-bottom: 16px; max-width: 250px; display: none;" class="input-group Imagen">
+                    <div class="container-div">
+                        <label for="linkImagen" class="input-group-addon">Imagen</label>
+                        <input onchange="verArchivo()" id="linkImagen" type="file" required accept="image/png, image/gif, image/jpeg" class="form-control"
+                           >
+                    </div>
+                    <span id="nombreImagen"></span>
+                </div>
+                <div style="margin-bottom: 16px; max-width: 250px; display: none;" class="input-group File">
+                    <div class="container-div">
+                        <label for="linkFile" class="input-group-addon">Archivo</label>
+                        <input onchange="verFile()" id="linkFile" type="file" required accept="text/x-vcard, text/vcard, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="form-control"
+                           >
+                    </div>
+                    <span id="nombreFile"></span>
+                </div>
+                <div style="margin-bottom: 16px; max-width: 250px;margin-left: 10px; display: none;" class="input-group Boton">
+                    <label for="linkBoton" class="input-group-addon">Link boton</label>
+                    <input id="linkBoton" type="text" required class="form-control"
+                        placeholder="http://link.com" value = "https://">
+                </div>
+                <div style="margin-bottom: 14.5%;" class="input-group">
+
+                    <div style="margin-top:10px; position:relative; " class="form-group Mensaje">
+                        <!-- Button -->
+
+                        <div style="position: relative; left: 11%;" class="col-sm-12 controls">
+                            <label title="Enviar mensaje" for="sendM" id="labelSendM"><i class="fa fa-paper-plane fa-2x"></i></label>
+                            <input style="display: none;" onchange="addMensaje()" type="checkbox" id="sendM">
+                            <span style="color:red; font-weight: 700;" id="textoMensaje">No enviar mensaje</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+</body>
+
+</html>

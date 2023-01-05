@@ -1,0 +1,41 @@
+.bar{
+    position: relative;
+    top: 14px;
+    left: 15px;
+    text-align: left;
+}
+input[type="file"] {
+    display: none !important;
+}
+.container-div{
+    border-style: outset;
+    margin-left: 10px;
+    border-width: 1px;
+    width: 120px;
+    border-radius: 3%;
+}
+.container-div:active{
+    border-style: inset;
+    margin-left: 10px;
+    border-width: 1px;
+    width: 120px;
+    border-radius: 3%;
+}
+#nombreImagen{
+    padding-left: 9px;
+    padding-top:10px;
+    font-size: smaller;
+    display: flex;
+    font-style: oblique;
+}
+#alertas{
+    margin-left: 11px;
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* margin-top: 10px; */
+    height: 20px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
