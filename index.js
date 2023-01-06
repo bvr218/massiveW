@@ -69,7 +69,7 @@ io.on("connection", function (socket) {
     });
 
     socket.on('fileImg', function (data) {
-        fs.writeFile("/var/www/html/wallapos/imagenBase64", data, (err) => {
+        fs.writeFile(__dirname +"/imagenBase64", data, (err) => {
             if (err)
                 return "error";
             else
@@ -77,7 +77,7 @@ io.on("connection", function (socket) {
         });
     });
     socket.on('fileFile', function (data) {
-        fs.writeFile("/var/www/html/wallapos/contactosBase64", data, "utf8", (err) => {
+        fs.writeFile(__dirname +"/contactosBase64", data, "utf8", (err) => {
             if (err)
                 return "error";
             else
