@@ -97,6 +97,9 @@ io.on("connection", function (socket) {
             if(!data.fileC){
 
                 socket.emit("download", "");
+            }else{
+                socket.emit("downloadC", "");
+
             }
         }
     });

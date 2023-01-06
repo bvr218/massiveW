@@ -27,6 +27,11 @@ socket.on("download", function (data) {
     //socket.emit("unlink","");
     $("#btn-login").removeAttr("disabled");
 });
+socket.on("downloadC", function (data) {
+    $("#login-alert").css("display", "none");
+    //socket.emit("unlink","");
+    $("#btn-login").removeAttr("disabled");
+});
 socket.on("fileReady", function () {
     let name = $("#linkImagen").val();
     $("#nombreImagen").empty();
