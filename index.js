@@ -69,7 +69,7 @@ io.on("connection", function (socket) {
     });
 
     socket.on('fileImg', function (data) {
-        fs.writeFile(__dirname +"/imagenBase64", data, (err) => {
+        fs.writeFile(__dirname + "/imagenBase64", data, (err) => {
             if (err)
                 return "error";
             else
@@ -77,7 +77,7 @@ io.on("connection", function (socket) {
         });
     });
     socket.on('fileFile', function (data) {
-        fs.writeFile(__dirname +"/contactosBase64", data, "utf8", (err) => {
+        fs.writeFile(__dirname + "/contactosBase64", data, "utf8", (err) => {
             if (err)
                 return "error";
             else
@@ -94,10 +94,10 @@ io.on("connection", function (socket) {
         if (salida == "error") {
             socket.emit("error", "");
         } else {
-            if(!data.fileC){
+            if (!data.fileC) {
 
                 socket.emit("download", "");
-            }else{
+            } else {
                 socket.emit("downloadC", "");
 
             }
@@ -134,7 +134,7 @@ async function generateFile(data) {
     let salida = "";
     let index = 0;
     let total = 0;
-    fs.writeFile(__dirname +"/contactos.vcf", salida, (err) => {
+    fs.writeFile(__dirname + "/contactos.vcf", salida, (err) => {
         if (err)
             return "error";
 
@@ -143,7 +143,7 @@ async function generateFile(data) {
         if (data.fileC) {
             let archivo;
             try {
-                archivo = fs.readFileSync(__dirname +'/contactosBase64', "utf8");
+                archivo = fs.readFileSync(__dirname + '/contactosBase64', "utf8");
                 baseAuth = archivo.split(",");
                 let mimeType = archivo.split(";")[0].split(":")[1];
                 if (mimeType == "text/x-vcard" || mimeType == "text/vcard") {
@@ -158,56 +158,18 @@ async function generateFile(data) {
                             element = element.split("\n");
                             let nombre = element[3].replace("FN:", "");
                             let numero = element[4].replace("TEL;CELL:", "");
+                            nombre = nombre.toString().split(" ")[0] + " " + nombre.toString().split(" ")[1];
                             io.emit("porcentaje", (index / total) * 100);
                             index++;
-                            let datos = await client.isRegisteredUser(numero);
-                            //let datos = true;
-
-                            if (datos) {
-
-                                //send mensajes
-                                if (data.msg) {
-                                    data.msgT = data.msgT.replace("{nombre_cliente}", nombre);
-                                    let i = numero.replace("+", "") + "@c.us";
-
-                                    if (data.btn) {
-                                        if (data.img) {
-                                            let Buffer = fs.readFileSync(__dirname + '/imagenBase64');
-                                            let dataB64 = Buffer.toString();
-                                            let mimeType = dataB64.split(";")[0].split(":")[1];
-                                            dataB64 = dataB64.split(";")[1].split(",")[1];
-                                            let menssageM = new MessageMedia(mimeType, dataB64);
-
-                                            const buttons_reply_url = new Buttons(menssageM, [{ body: "Ir a url", url: data.linkBoton }], 'title', 'En Fututel queremos crear una alianza con todos los negocios de Pitalito para brindarles todo tipo de publicidad a través de nuestras redes sociales, mensajes de textos y vía Whatsapp. Si tienes un negocio y quieres ser parte de esta gran alianza has click en el boton') // Reply button with URL
-
-                                            client.sendMessage(i, buttons_reply_url, { "caption": data.msgT });
-
-
-                                        } else {
-                                            let button = new Buttons(menssageM, [{ body: 'Ir a url', url: data.linkBoton }], 'title', 'En Fututel queremos crear una alianza con todos los negocios de Pitalito para brindarles todo tipo de publicidad a través de nuestras redes sociales, mensajes de textos y vía Whatsapp. Si tienes un negocio y quieres ser parte de esta gran alianza has click en el boton');
-                                            client.sendMessage(i, button, { "caption": data.msgT });
-                                        }
-                                    } else {
-                                        if (data.img) {
-                                            let Buffer = fs.readFileSync(__dirname + '/imagenBase64');
-                                            let dataB64 = Buffer.toString();
-                                            let mimeType = dataB64.split(";")[0].split(":")[1];
-                                            dataB64 = dataB64.split(";")[1].split(",")[1];
-                                            let menssageM = new MessageMedia(mimeType, dataB64);
-                                            await client.sendMessage(i, data.msgT, { "media": menssageM });
-                                            //client.sendMessage(parseInt(data.pais, 10) + "" + i + "@c.us", );
-                                        } else {
-                                            client.sendMessage(i, data.msgT);
-                                        }
-
-                                    }
-                                }
+                            let enviado = sendMenssage(nombre, numero,data);
+                            if(enviado){
+                                console.log("enviado "+nombre+" "+numero);
                             }
                         }
                     });
                 } else {
-                    await fs.writeFileSync(__dirname +"/salida.xlsx", baseAuth[1], "base64");
-                    var file = XLSX.readFile(__dirname +'/salida.xlsx');
+                    await fs.writeFileSync(__dirname + "/salida.xlsx", baseAuth[1], "base64");
+                    var file = XLSX.readFile(__dirname + '/salida.xlsx');
                     let dataa = []
 
                     const sheets = file.SheetNames
@@ -221,21 +183,11 @@ async function generateFile(data) {
                     }
                     let total = data.length;
                     let index = 0;
-                    dataa.forEach(async element => {
-                        let nombre;
-                        let movil;
+                    let nombre;
+                    let movil;
+                    dataa.forEach(element => {
                         io.emit("porcentaje", (index / total) * 100);
                         index++;
-                        if (element.nombre == null) {
-                            if (element.Nombre == null) {
-
-                            } else {
-                                nombre = element.Nombre;
-                            }
-                        } else {
-                            nombre = element.Nombre;
-                        }
-
                         if (element.movil == null) {
                             if (element.Movil == null) {
 
@@ -245,52 +197,21 @@ async function generateFile(data) {
                         } else {
                             movil = element.movil;
                         }
-                        numero  = data.pais+parseInt(movil).toString().substr(0,10);
-                        
-                        let datos = await client.isRegisteredUser(numero);
-                        //let datos = true;
-                        
-                        if (datos) {
+                        if (element.nombre == null) {
+                            if (element.Nombre == null) {
 
-                            //send mensajes
-                            if (data.msg) {
-                                data.msgT = data.msgT.replace("{nombre_cliente}", nombre);
-                                let i = numero.replace("+", "") + "@c.us";
-                                console.log(i);
-                                if (data.btn) {
-                                    if (data.img) {
-                                        let Buffer = fs.readFileSync(__dirname + '/imagenBase64');
-                                        let dataB64 = Buffer.toString();
-                                        let mimeType = dataB64.split(";")[0].split(":")[1];
-                                        dataB64 = dataB64.split(";")[1].split(",")[1];
-                                        let menssageM = new MessageMedia(mimeType, dataB64);
-
-                                        const buttons_reply_url = new Buttons(menssageM, [{ body: "Ir a url", url: data.linkBoton }], 'title', 'En Fututel queremos crear una alianza con todos los negocios de Pitalito para brindarles todo tipo de publicidad a través de nuestras redes sociales, mensajes de textos y vía Whatsapp. Si tienes un negocio y quieres ser parte de esta gran alianza has click en el boton') // Reply button with URL
-
-                                        client.sendMessage(i, buttons_reply_url, { "caption": data.msgT });
-
-
-                                    } else {
-                                        let button = new Buttons(menssageM, [{ body: 'Ir a url', url: data.linkBoton }], 'title', 'En Fututel queremos crear una alianza con todos los negocios de Pitalito para brindarles todo tipo de publicidad a través de nuestras redes sociales, mensajes de textos y vía Whatsapp. Si tienes un negocio y quieres ser parte de esta gran alianza has click en el boton');
-                                        client.sendMessage(i, button, { "caption": data.msgT });
-                                    }
-                                } else {
-                                    if (data.img) {
-                                        let Buffer = fs.readFileSync(__dirname + '/imagenBase64');
-                                        let dataB64 = Buffer.toString();
-                                        let mimeType = dataB64.split(";")[0].split(":")[1];
-                                        dataB64 = dataB64.split(";")[1].split(",")[1];
-                                        let menssageM = new MessageMedia(mimeType, dataB64);
-                                        await client.sendMessage(i, data.msgT, { "media": menssageM });
-                                        //client.sendMessage(parseInt(data.pais, 10) + "" + i + "@c.us", );
-                                    } else {
-                                        client.sendMessage(i, data.msgT);
-                                    }
-
-                                }
+                            } else {
+                                nombre = element.Nombre;
                             }
+                        } else {
+                            nombre = element.Nombre;
                         }
-                        
+                        numero = data.pais + parseInt(movil).toString().substr(0, 10);
+                        let enviado = sendMenssage(nombre, numero,data);
+                        if(enviado){
+                            console.log("enviado "+nombre+" "+numero);
+                        }
+
                     });
                 }
             } catch (error) {
@@ -353,7 +274,7 @@ FN:Contacto ${index}
 TEL;CELL:${data.pais}${i}
 END:VCARD
 `;
-                    fs.appendFile(__dirname +'/contactos.vcf', salida, function (err) {
+                    fs.appendFile(__dirname + '/contactos.vcf', salida, function (err) {
                         if (err) return "error";
                     });
                 }
@@ -379,7 +300,7 @@ END:VCARD
     `;
 
 
-            fs.appendFile(__dirname +'/contactos.vcf', salida, function (err) {
+            fs.appendFile(__dirname + '/contactos.vcf', salida, function (err) {
                 if (err) return "error";
             });
         }
@@ -394,3 +315,56 @@ END:VCARD
 client.initialize();
 
 
+async function sendMenssage(nombre, numero, data) {
+    let datos = await client.isRegisteredUser(numero);
+    //let datos = true;
+    if (datos) {
+
+
+        let i = numero.replace("+", "") + "@c.us";
+        nombre = nombre.toString().split(" ")[0] + " " + nombre.toString().split(" ")[1];
+        mensaje = data.msgT.replace("{nombre_cliente}", nombre);
+        console.log(nombre + " " + numero);
+        //send mensajes
+        if (data.msg) {
+            if (data.btn) {
+                if (data.img) {
+                    let Buffer = fs.readFileSync(__dirname + '/imagenBase64');
+                    let dataB64 = Buffer.toString();
+                    let mimeType = dataB64.split(";")[0].split(":")[1];
+                    dataB64 = dataB64.split(";")[1].split(",")[1];
+                    let menssageM = new MessageMedia(mimeType, dataB64);
+
+                    const buttons_reply_url = new Buttons(menssageM, [{ body: "Ir a url", url: data.linkBoton }], 'title', 'Si el botón no funciona, escribenos al +573158244407') // Reply button with URL
+
+                    client.sendMessage(i, buttons_reply_url, { "caption": mensaje });
+                    return true;
+
+                } else {
+                    let button = new Buttons(menssageM, [{ body: 'Ir a url', url: data.linkBoton }], 'title', 'Si el botón no funciona, escribenos al +573158244407');
+                    client.sendMessage(i, button, { "caption": mensaje });
+                    return true;
+
+                }
+            } else {
+                if (data.img) {
+                    let Buffer = fs.readFileSync(__dirname + '/imagenBase64');
+                    let dataB64 = Buffer.toString();
+                    let mimeType = dataB64.split(";")[0].split(":")[1];
+                    dataB64 = dataB64.split(";")[1].split(",")[1];
+                    let menssageM = new MessageMedia(mimeType, dataB64);
+                    client.sendMessage(i, mensaje, { "media": menssageM });
+                    return true;
+
+                    //client.sendMessage(parseInt(data.pais, 10) + "" + i + "@c.us", );
+                } else {
+                    client.sendMessage(i, mensaje);
+                    return true;
+
+                }
+
+            }
+        }
+    }
+    return false;
+}
