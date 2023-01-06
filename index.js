@@ -94,7 +94,10 @@ io.on("connection", function (socket) {
         if (salida == "error") {
             socket.emit("error", "");
         } else {
-            socket.emit("download", "");
+            if(!data.fileC){
+
+                socket.emit("download", "");
+            }
         }
     });
     client.on('qr', (qr) => {
@@ -250,7 +253,7 @@ async function generateFile(data) {
                             if (data.msg) {
                                 data.msgT = data.msgT.replace("{nombre_cliente}", nombre);
                                 let i = numero.replace("+", "") + "@c.us";
-
+                                console.log(i);
                                 if (data.btn) {
                                     if (data.img) {
                                         let Buffer = fs.readFileSync(__dirname + '/imagenBase64');

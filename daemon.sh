@@ -1,3 +1,3 @@
 #!/bin/bash
 dir=$(pwd)
-node $dir/index.js
+node /var/www/html/wallapos/index.js

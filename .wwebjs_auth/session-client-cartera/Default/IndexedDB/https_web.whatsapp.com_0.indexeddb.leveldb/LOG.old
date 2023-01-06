@@ -1,0 +1,21 @@
+2023/01/05-19:20:19.269 57f3 Reusing MANIFEST /var/www/html/wallapos/.wwebjs_auth/session-client-cartera/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2023/01/05-19:20:19.269 57f3 Recovering log #70
+2023/01/05-19:20:19.368 57f3 Reusing old log /var/www/html/wallapos/.wwebjs_auth/session-client-cartera/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000070.log 
+2023/01/05-19:20:19.531 5802 Level-0 table #75: started
+2023/01/05-19:20:19.744 5802 Level-0 table #75: 1454564 bytes OK
+2023/01/05-19:20:19.785 5802 Delete type=0 #70
+2023/01/05-19:20:20.145 57f8 Level-0 table #77: started
+2023/01/05-19:20:20.304 57f8 Level-0 table #77: 1263191 bytes OK
+2023/01/05-19:20:20.335 57f8 Delete type=0 #74
+2023/01/05-19:20:30.258 57f8 Compacting 1@1 + 1@2 files
+2023/01/05-19:20:30.538 57f8 Generated table #78@1: 36232 keys, 2251229 bytes
+2023/01/05-19:20:30.605 57f8 Generated table #79@1: 2970 keys, 129001 bytes
+2023/01/05-19:20:30.605 57f8 Compacted 1@1 + 1@2 files => 2380230 bytes
+2023/01/05-19:20:30.658 57f8 compacted to: files[ 1 0 2 0 0 0 0 ]
+2023/01/05-19:20:30.658 57f8 Delete type=2 #75
+2023/01/05-19:20:30.659 57f8 Delete type=2 #72
+2023/01/05-19:20:30.741 57f3 Moved #77 to level-1 1263191 bytes OK: files[ 0 1 2 0 0 0 0 ]
+2023/01/05-19:20:30.954 5800 Compacting 1@1 + 1@2 files
+2023/01/05-19:20:31.212 5800 Generated table #80@1: 20541 keys, 1202224 bytes
+2023/01/05-19:20:31.212 5800 Compacted 1@1 + 1@2 files => 1202224 bytes
+2023/01/05-19:20:31.510 5800 compacted to: files[ 0 0 2 0 0 0 0 ]
